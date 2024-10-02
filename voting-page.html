@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote for a Candidate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Algerian&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Algerian', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+            margin: 0;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button.voted {
+            background-color: #7e99f2;
+            color: white;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 id="post-title"></h2>
+        <div id="candidate-buttons"></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const post = urlParams.get('post');
+        let voteCount = 0;
+
+        const candidates = {
+            'president': ['Candidate A', 'Candidate B', 'Candidate C'],
+            'vice-president': ['Candidate D', 'Candidate E', 'Candidate F'],
+            'secretary': ['Candidate G', 'Candidate H', 'Candidate I'],
+            'assistant-secretary': ['Candidate J', 'Candidate K', 'Candidate L']
+        };
+
+        const postTitleElement = document.getElementById('post-title');
+        const candidateButtonsContainer = document.getElementById('candidate-buttons');
+
+        postTitleElement.textContent = `Vote for ${post.replace('-', ' ').toUpperCase()}`;
+
+        function createCandidateButtons() {
+            if (candidates[post]) {
+                candidates[post].forEach(candidate => {
+                    const button = document.createElement('button');
+                    button.textContent = candidate;
+                    button.onclick = () => castVote(candidate, button);
+                    candidateButtonsContainer.appendChild(button);
+                });
+            }
+        }
+
+        function castVote(candidate, button) {
+            button.classList.add('voted');
+            button.innerHTML = "Your vote is final; no rewinds in this digital realm😁";
+            button.disabled = true;
+
+            let votedPosts = JSON.parse(localStorage.getItem('votedPosts')) || [];
+            if (!votedPosts.includes(post)) {
+                votedPosts.push(post);
+                localStorage.setItem('votedPosts', JSON.stringify(votedPosts));
+            }
+
+            voteCount++;
+            setTimeout(() => {
+                if (voteCount != candidates[post].length) {
+                    window.location.href = "post-selection.html";
+                } else {
+                    window.location.href = "thankyou.html";
+                }
+            }, 3000); // 3 seconds delay before redirect
+        }
+
+        createCandidateButtons();
+    </script>
+</body>
+</html>

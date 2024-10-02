@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Login</title>
+    <style>
+        @font-face {
+            font-family: 'Algerian';
+            src: url('https://fonts.cdnfonts.com/s/19695/Algerian.woff') format('woff');
+        }
+
+        body {
+            font-family: 'Algerian', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Algerian', sans-serif;
+        }
+
+        .otp-container {
+            position: relative;
+            display: inline-block;
+            width: 80%;
+        }
+
+        .toggle-otp {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            width: 30%;
+            padding: 5px;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Algerian', sans-serif;
+            font-size: 14px;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input[type="submit"]:hover {
+            background-color: darkblue;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Register Number Section -->
+        <h2>Enter Your Register Number</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Register Number:</label>
+                <input type="text" id="username" required>
+            </div>
+            <input type="submit" value="Send OTP">
+        </form>
+        <p id="responseMessage"></p>
+
+        <!-- OTP Section -->
+        <h2>Enter OTP</h2>
+        <form id="otpForm">
+            <label for="otp">OTP:</label>
+            <div class="otp-container">
+                <input type="password" id="otp" placeholder="Enter OTP" required>
+                <span id="toggleOtp" class="toggle-otp" onclick="toggleOtpVisibility()">👁️</span>
+            </div>
+            <input type="submit" value="Submit OTP">
+        </form>
+    </div>
+
+    <script>
+        // Toggle OTP visibility
+        function toggleOtpVisibility() {
+            const otpField = document.getElementById("otp");
+            const toggleIcon = document.getElementById("toggleOtp");
+
+            if (otpField.type === "password") {
+                otpField.type = "text";
+                toggleIcon.textContent = "🙈"; // Change icon to 'closed eye' when showing OTP
+            } else {
+                otpField.type = "password";
+                toggleIcon.textContent = "👁️"; // Change icon to 'open eye' when hiding OTP
+            }
+        }
+
+        // Register Number Submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            fetch('/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseMessage').textContent = data.message;
+            })
+            .catch(error => {
+                document.getElementById('responseMessage').textContent = 'Error sending OTP. Please try again.';
+            });
+        });
+
+        // OTP Validation
+        document.getElementById('otpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const otp = document.getElementById('otp').value;
+
+            if (otp.length === 6) { // Assuming a 6-digit OTP
+                alert("OTP Submitted!");
+                // Handle OTP submission logic
+            } else {
+                alert("Invalid OTP. Please enter a 6-digit code.");
+            }
+        });
+    </script>
+
+</body>
+</html>

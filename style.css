@@ -1,0 +1,52 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: 'Algerian', serif;
+    text-align: center;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+}
+
+.carousel {
+    display: flex;
+    overflow: hidden;
+    width: 60%;
+    margin: 0 10px;
+}
+
+.carousel-item {
+    display: inline-block;
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.carousel-item:hover {
+    transform: scale(1.1);
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+button.voted {
+    background-color: #ff5722; /* Change to a color indicating the user has voted */
+}
+
+.thankyou-container {
+    text-align: center;
+    color: #4CAF50;
+}

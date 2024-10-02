@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Algerian&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Algerian', serif;
+            text-align: center;
+        }
+        .container {
+            border: 2px solid #ddd;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+        .post-title {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .carousel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 20px;
+        }
+        .carousel button {
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+        .carousel .left-arrow, .carousel .right-arrow {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .voted {
+            background-color: #ff5722;
+        }
+        .final-message {
+            color: yellow;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="post-title">PRESIDENT</div>
+        <div class="carousel">
+            <span class="left-arrow" onclick="moveLeft('president')">&#9664;</span>
+            <img id="president-img" src="https://via.placeholder.com/150" alt="Candidate 1">
+            <div>
+                <button id="president-btn" onclick="castVote('president')">Vote for Candidate 1</button>
+            </div>
+            <span class="right-arrow" onclick="moveRight('president')">&#9654;</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="post-title">VICE PRESIDENT</div>
+        <div class="carousel">
+            <span class="left-arrow" onclick="moveLeft('vp')">&#9664;</span>
+            <img id="vp-img" src="https://via.placeholder.com/150" alt="Candidate 1">
+            <div>
+                <button id="vp-btn" onclick="castVote('vp')">Vote for Candidate 1</button>
+            </div>
+            <span class="right-arrow" onclick="moveRight('vp')">&#9654;</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="post-title">SECRETARY</div>
+        <div class="carousel">
+            <span class="left-arrow" onclick="moveLeft('secretary')">&#9664;</span>
+            <img id="secretary-img" src="https://via.placeholder.com/150" alt="Candidate 1">
+            <div>
+                <button id="secretary-btn" onclick="castVote('secretary')">Vote for Candidate 1</button>
+            </div>
+            <span class="right-arrow" onclick="moveRight('secretary')">&#9654;</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="post-title">ASSISTANT SECRETARY</div>
+        <div class="carousel">
+            <span class="left-arrow" onclick="moveLeft('assistant-secretary')">&#9664;</span>
+            <img id="assistant-secretary-img" src="https://via.placeholder.com/150" alt="Candidate 1">
+            <div>
+                <button id="assistant-secretary-btn" onclick="castVote('assistant-secretary')">Vote for Candidate 1</button>
+            </div>
+            <span class="right-arrow" onclick="moveRight('assistant-secretary')">&#9654;</span>
+        </div>
+    </div>
+
+    <script>
+        const candidates = {
+            president: [
+                { name: "Candidate 1", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 2", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 3", img: "https://via.placeholder.com/150" }
+            ],
+            vp: [
+                { name: "Candidate 1", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 2", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 3", img: "https://via.placeholder.com/150" }
+            ],
+            secretary: [
+                { name: "Candidate 1", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 2", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 3", img: "https://via.placeholder.com/150" }
+            ],
+            'assistant-secretary': [
+                { name: "Candidate 1", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 2", img: "https://via.placeholder.com/150" },
+                { name: "Candidate 3", img: "https://via.placeholder.com/150" }
+            ]
+        };
+
+        let currentIndex = {
+            president: 0,
+            vp: 0,
+            secretary: 0,
+            'assistant-secretary': 0
+        };
+
+        function moveLeft(post) {
+            currentIndex[post] = (currentIndex[post] - 1 + candidates[post].length) % candidates[post].length;
+            updateCarousel(post);
+        }
+
+        function moveRight(post) {
+            currentIndex[post] = (currentIndex[post] + 1) % candidates[post].length;
+            updateCarousel(post);
+        }
+
+        function updateCarousel(post) {
+            const imgElement = document.getElementById(`${post}-img`);
+            const btnElement = document.getElementById(`${post}-btn`);
+            const candidate = candidates[post][currentIndex[post]];
+
+            imgElement.src = candidate.img;
+            btnElement.innerHTML = `Vote for ${candidate.name}`;
+            btnElement.disabled = false; // Re-enable button if needed for different candidates
+            btnElement.classList.remove('voted');
+        }
+
+        function castVote(post) {
+            const btnElement = document.getElementById(`${post}-btn`);
+            btnElement.classList.add('voted');
+            btnElement.innerHTML = "Your vote is final; no rewinds in this digital realm😁";
+            btnElement.disabled = true; // Disable the button after voting
+
+            setTimeout(() => {
+                window.location.href = "thankyou.html"; // Redirect to thank you page after 3 seconds
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>

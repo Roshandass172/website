@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Algerian&display=swap" rel="stylesheet">
+    <style> h7
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Algerian', serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const teacher = urlParams.get('teacher');
+        document.write(`<h2>WELCOME ${teacher}!</h2>`);
+    </script>
+</body>
+</html>

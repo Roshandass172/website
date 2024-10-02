@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a Post</title>
+    <link href="https://fonts.googleapis.com/css2?family=Algerian&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Algerian', sans-serif;
+            background-color: #f0f0f0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            margin-bottom: 30px;
+        }
+
+        .carousel-container {
+            width: 80%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            align-items: center;
+        }
+
+        .carousel-item {
+            width: 250px;
+            height: 350px;
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item img {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .carousel-item h3 {
+            margin-top: 10px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .carousel-item:hover {
+            transform: scale(1.1);
+        }
+
+        .voted-item {
+            background-color: #2657c9 !important;
+        }
+
+        .carousel-btns {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .carousel-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .carousel-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #bbb;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Post to Vote</h1>
+    <div class="carousel-container">
+        <div class="carousel-btns">
+            <button class="carousel-btn" id="left-btn">←</button>
+            <button class="carousel-btn" id="right-btn">→</button>
+        </div>
+        <div class="carousel" id="carousel">
+            <div class="carousel-item" data-post="president">
+                <img src="images/president.jpg" alt="President" />
+                <h3>President</h3>
+            </div>
+            <div class="carousel-item" data-post="vice-president">
+                <img src="images/vice-president.jpg" alt="Vice President" />
+                <h3>Vice President</h3>
+            </div>
+            <div class="carousel-item" data-post="secretary">
+                <img src="images/secretary.jpg" alt="Secretary" />
+                <h3>Secretary</h3>
+            </div>
+            <div class="carousel-item" data-post="assistant-secretary">
+                <img src="images/assistant-secretary.jpg" alt="Assistant Secretary" />
+                <h3>Assistant Secretary</h3>
+            </div>
+        </div>
+        <div class="dots" id="dots-container"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId') || Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('userId', userId);
+    
+            let votedPosts = JSON.parse(localStorage.getItem(`votes_${userId}`)) || [];
+            const items = document.querySelectorAll('.carousel-item');
+            const carousel = document.getElementById('carousel');
+            const leftBtn = document.getElementById('left-btn');
+            const rightBtn = document.getElementById('right-btn');
+            const dotsContainer = document.getElementById('dots-container');
+            const posts = ['president', 'vice-president', 'secretary', 'assistant-secretary'];
+            let currentIndex = 0;
+            const itemWidth = items[0].offsetWidth + 30;
+    
+            function updateItemColors() {
+                items.forEach(item => {
+                    item.classList.remove('voted-item');
+                });
+                votedPosts.forEach(post => {
+                    const postElement = document.querySelector(`.carousel-item[data-post='${post}']`);
+                    if (postElement) {
+                        postElement.classList.add('voted-item');
+                    }
+                });
+            }
+    
+            function updateDots() {
+                dotsContainer.innerHTML = '';
+                items.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.classList.add('dot');
+                    if (index === currentIndex) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        currentIndex = index;
+                        carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+                        updateDots();
+                    });
+                    dotsContainer.appendChild(dot);
+                });
+            }
+    
+            function castVote(post) {
+                if (!votedPosts.includes(post)) {
+                    votedPosts.push(post);
+                    localStorage.setItem(`votes_${userId}`, JSON.stringify(votedPosts));
+                }
+
+                updateItemColors(); 
+                window.location.href = `voting-page.html?post=${post}`; // Redirect to voting-page.html with the post parameter
+            }
+    
+            items.forEach(item => {
+                item.addEventListener('click', () => {
+                    const post = item.getAttribute('data-post');
+                    castVote(post);
+                });
+            });
+    
+            leftBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+                    updateDots();
+                }
+            });
+    
+            rightBtn.addEventListener('click', () => {
+                if (currentIndex < items.length - 1) {
+                    currentIndex++;
+                    carousel.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+                    updateDots();
+                } else {
+                    window.location.href = 'thankyou.html'; // Redirect to thankyou.html when the last slide is reached
+                }
+            });
+    
+            updateItemColors();
+            updateDots();
+        });
+    </script>
+</body>
+</html>
