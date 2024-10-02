@@ -1,0 +1,104 @@
+body {
+    font-family: 'Algerian', sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0;
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 30px;
+}
+
+.carousel-container {
+    width: 80%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    align-items: center;
+}
+
+.carousel-item {
+    width: 250px;
+    height: 350px;
+    background-color: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 15px;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.carousel-item img {
+    width: 150px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.carousel-item h3 {
+    margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.carousel-item:hover {
+    transform: scale(1.1);
+}
+
+.voted-item {
+    background-color: #2657c9 !important;
+}
+
+.carousel-btns {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.carousel-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.carousel-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #bbb;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: #333;
+}
